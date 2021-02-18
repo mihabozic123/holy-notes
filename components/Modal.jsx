@@ -28,24 +28,35 @@ class noteDisplay extends React.PureComponent {
 	for(let i = 0; i < Object.keys(settings).length; i++) {
 		let note = settings[Object.keys(settings)[i]]
 		userId.push(note['User ID'])
-		noteArray.push(<Avatar style={{'position' : 'absolute'}} src={note['Avatar URL']} size='SIZE_40'/>)
+		noteArray.push(<Avatar style={{
+			'position': 'relative',
+			'top': '20px'
+		}} src={note['Avatar URL']} size='SIZE_40' />)
 		noteArray.push(<span style={{
-		  'color' : 'white', 
-		  'position' : 'absolute', 
-		  'padding-left' : '10px', 
-		  'margin-top' : '23px'
+		  	'color' : 'white', 
+			'position' : 'relative', 
+			'paddingLeft': '10px',
+			'marginTop': '23px'
 		}}>{note['Username']}</span>)
-		noteArray.push(<Text selectable={true} style={{'padding-left': '50px', 'position': 'absolute'}}>{note['Content']}</Text>)
+		noteArray.push(<Text selectable={true} style={{
+			'padding-left': '50px',
+			'position': 'relative'
+		}}>{note['Content']}</Text>)
+		try {
+			noteArray.push(<embed selectable={true} style={{
+				'width': '70%',
+				'height': 'auto',
+				'padding-left': '50px',
+				'padding-top': '15px',
+				'padding-bottom': '15px',
+				'position': 'relative'
+			}} src={note['Attachment']} />)
+		} catch {
+			console.log("Error in Attachment");
+		}
 		noteArray.push(<br/>)
 	}
-	
-	/* 2nd option: My shitty attempt at making a simulated channel and just pushing message data to that channel (not functional) */
-	const { default: Channel } = getModule([ 'isPrivate' ], false)
-	const fakeChannel = new Channel({ id: '6666' })
 
-	const ChannelMessage = getModuleByDisplayName('ChannelMessage', false)
-	// const channel = new fakeChannel()
-	// channel.push({settings})
 
 	return(	
 	  <Modal className='Notebook' size={Modal.Sizes.LARGE}>
@@ -66,4 +77,4 @@ class noteDisplay extends React.PureComponent {
   }
 }
 
-module.exports = noteDisplay
+module.exports = noteDisplay;
