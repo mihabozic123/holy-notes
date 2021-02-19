@@ -6,10 +6,8 @@ const { open: openModal } = require('powercord/modal');
 const { findInReactTree } = require('powercord/util');
 const NotesHandler = new (require('./NotesHandler'))();
 
-/* TODO: (cancelled due to recent events)
-Inject into not only messagecontext but the 3 dot message menu as well
-Create simulated channel and add messages
-Replace the word "settings" with "notes" in Modal.jsx
+/* TODO:
+Create simulated channel and add messages - Later
 */
 
 const NotebookButton = require('./components/NotebookButton');
@@ -28,7 +26,6 @@ module.exports = class Notebook extends Plugin {
         usage: '{c} [ args ]', //and now comes the horrifying mess. Heelp
         executor: (args) => {
             let n = args[1]
-            console.log(n)
             let notes
             let note
             switch(args[0]){
@@ -39,31 +36,49 @@ module.exports = class Notebook extends Plugin {
                       return {
                         send: false,
                         result: 'Please input a number or valid ID'
-                      }
-                    } 
+                      }} 
 
                     note = notes[n]
-                    console.log(note)
                     messageID = note['Message_ID'] 
                     if(messageID === undefined) {
                         return {
                         send: false,
                         result: '```\nNot a note.\n```'
-                        }
-                    }
+                        }}
+                        
                     NotesHandler.deleteNote(messageID)
                     return {
                         send: false,
                         result: 'Note **'+n+'** deleted'
                     }
-            }
-            // i really should make functions to clean this horrifying mess up
-        },
+
+                case 'link':
+                  let message_ID
+                  notes = NotesHandler.getNotes()
+                  if(!n) {
+                    return {
+                      send: false,
+                      result: 'Please input a number or valid ID'
+                    }} 
+
+                  note = notes[n]
+                  message_ID = note['Message_ID'] 
+                  if(message_ID === undefined) {
+                      return {
+                      send: false,
+                      result: '```\nNot a note.\n```'
+                      }}
+                  NotesHandler.getNote(message_ID)
+                  return {
+                      send: false,
+                      result: note['Message_URL']
+                  }}},
         autocomplete: (args) => {
 			if (args.length !== 1) {
 				return false;
 			}
             let options = {
+                link : 'Sends the Link to the Noted Message given its ID',
                 erase: 'Erases Note from your Notebook given it\'s number.'
             }
 			return {

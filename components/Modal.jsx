@@ -3,7 +3,6 @@ const { Card } = require('powercord/components')
 const { Modal } = require('powercord/components/modal')
 const { FormTitle, Text } = require('powercord/components')
 const { close: closeModal } = require('powercord/modal')
-const { match } = require('sucrase/dist/parser/tokenizer')
 const { Avatar } = getModule(['Avatar'], false)
 const NotesHandler = new (require('../NotesHandler'))()
 
@@ -18,9 +17,6 @@ class noteDisplay extends React.PureComponent {
 
   render() {
 	const settings = NotesHandler.getNotes()
-	console.log(settings)
-	console.log(settings.length)
-	console.log(Object.keys(settings).length)
 
 	const noteArray = []
 	const userId = []
@@ -28,6 +24,7 @@ class noteDisplay extends React.PureComponent {
 	  /* First option: A for loop just pushes a ton of stuff to an array to display later, so it's basically just displaying the note in plain text (looks awful) */
 	for(let i = 0; i < Object.keys(settings).length; i++) {
 		let note = settings[Object.keys(settings)[i]]
+		let msgs = note['Content']
 		userId.push(note['User_ID'])
 		noteArray.push(<Text selectable={true} style={{
 			//'padding-left': '50px',
@@ -87,7 +84,6 @@ class noteDisplay extends React.PureComponent {
 				}} src={note['Attachment']} />)
 			}
 		} catch {
-			console.log("No attachment found for Message");
 		}
 		noteArray.push(<br/>)
 	}
