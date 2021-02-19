@@ -50,6 +50,20 @@ class NotesHandler {
 		}
 		fs.writeFileSync(notesPath, JSON.stringify(notes, null, '\t'))
 	}
+
+    deleteNote = (noteName) => {
+        this.initNotes()
+        let notes
+		try {
+			notes = this.getNotes()
+		} catch {
+			return
+		}
+        if(this.getNote(noteName)){
+            delete notes[noteName]
+        }
+        fs.writeFileSync(notesPath, JSON.stringify(notes, null, '\t'))
+    }
 }
 
 module.exports = NotesHandler
