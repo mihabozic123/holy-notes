@@ -13,5 +13,5 @@ To Delete Notes use the Powercord command
 The Message ID is listed above the Message in Note Viewer.
 
 Credits:
-	https://github.com/D-Brox 		- erase command and Tooltip
+	https://github.com/D-Brox 	- erase command and Tooltip
 	https://github.com/Swishilicous - Original Pluginmaker
