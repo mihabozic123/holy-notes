@@ -1,19 +1,20 @@
-const { React, getModule, getModuleByDisplayName } = require('powercord/webpack')
+const { React, getModule, getModuleByDisplayName, NavigationUtils } = require('powercord/webpack')
 const { Card } = require('powercord/components')
 const { Modal } = require('powercord/components/modal')
 const { FormTitle, Text } = require('powercord/components')
 const { close: closeModal } = require('powercord/modal')
+const { match } = require('sucrase/dist/parser/tokenizer')
 const { Avatar } = getModule(['Avatar'], false)
 const NotesHandler = new (require('../NotesHandler'))()
 
 class noteDisplay extends React.PureComponent {
-  constructor(props) {
-	super(props)
-  }
+	constructor(props) {
+		super(props)
+	}
 
 
-  async componentDidMount() {
-  }
+	async componentDidMount() {
+	}
 
   render() {
 	const settings = NotesHandler.getNotes()
@@ -28,29 +29,37 @@ class noteDisplay extends React.PureComponent {
 	for(let i = 0; i < Object.keys(settings).length; i++) {
 		let note = settings[Object.keys(settings)[i]]
 		userId.push(note['User ID'])
-		noteArray.push(<Avatar style={{
+		noteArray.push(<Avatar src={note['Avatar URL']} size='SIZE_40' style={{
 			'position': 'relative',
 			'top': '20px'
-		}} src={note['Avatar URL']} size='SIZE_40' />)
+		}} />)
 		noteArray.push(<span style={{
-		  	'color' : 'white', 
+			'color' : 'white', 
 			'position' : 'relative', 
 			'paddingLeft': '10px',
-			'marginTop': '23px'
+			'marginTop': '23px',
+			'bottom': '21px',
+			'font-size': '24px'
 		}}>{note['Username']}</span>)
-		noteArray.push(<Text selectable={true} style={{
+		noteArray.push(<a href={note['Message URL']}> <Text selectable={true} style={{
 			'padding-left': '50px',
-			'position': 'relative'
-		}}>{note['Content']}</Text>)
+			'position': 'relative',
+			'bottom': '8px',
+			'font-size': '20px'
+		}}>{note['Content']}</Text></a>)
 		try {
-			noteArray.push(<embed selectable={true} style={{
-				'width': '70%',
-				'height': 'auto',
-				'padding-left': '50px',
-				'padding-top': '15px',
-				'padding-bottom': '15px',
-				'position': 'relative'
-			}} src={note['Attachment']} />)
+			let attch = note['Attachment']
+			if (attch.match(".png") || attch.match(".jpg") || attch.match(".gif") || attch.match(".jpeg")) {
+				noteArray.push(<a href={note['Attachment']}> <img selectable={true} style={{
+					'width': '70%',
+					'height': 'auto',
+					'padding-left': '50px',
+					'padding-top': '5px',
+					'padding-bottom': '15px',
+					'position': 'relative',
+					'display': 'inline'
+				}} src={note['Attachment']} /> </a>)
+			}
 		} catch {
 			console.log("Error in Attachment");
 		}
