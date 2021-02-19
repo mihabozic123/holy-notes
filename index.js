@@ -13,17 +13,76 @@ Replace the word "settings" with "notes" in Modal.jsx
 */
 
 const NotebookButton = require('./components/NotebookButton');
+const NoteButton = require('./components/NoteButton')
 const Modal = require('./components/Modal');
 
 module.exports = class Notebook extends Plugin {
-  async startPlugin() {
-    this._injectHeaderBarContainer();
-    this._injectContextMenu();
+  async startPlugin () {
+    this._injectHeaderBarContainer()
+    this._injectContextMenu()
+    this._injectToolbar()
+
+    powercord.api.commands.registerCommand({
+        command: 'notebook',
+        description: 'Notebook to keep your favourite notes',
+        usage: '{c} [ args ]', //and now comes the horrifying mess. Heelp
+        executor: (args) => {
+            let n = args[1]
+            console.log(n)
+            let notes
+            let note
+            switch(args[0]){
+                case 'erase':
+                    let messageID
+                    notes = NotesHandler.getNotes()
+                    if(!n) {
+                      return {
+                        send: false,
+                        result: 'Please input a number or valid ID'
+                      }
+                    } 
+
+                    note = notes[n]
+                    console.log(note)
+                    messageID = note['Message_ID'] 
+                    if(messageID === undefined) {
+                        return {
+                        send: false,
+                        result: '```\nNot a note.\n```'
+                        }
+                    }
+                    NotesHandler.deleteNote(messageID)
+                    return {
+                        send: false,
+                        result: 'Note **'+n+'** deleted'
+                    }
+            }
+            // i really should make functions to clean this horrifying mess up
+        },
+        autocomplete: (args) => {
+			if (args.length !== 1) {
+				return false;
+			}
+            let options = {
+                erase: 'Erases Note from your Notebook given it\'s number.'
+            }
+			return {
+				commands: Object.keys(options)
+					.filter((option) => option.includes(args[0].toLowerCase()))
+					.map((option) => ({
+						command: option,
+						description: options[option],
+					})),
+				header: 'Notebook commands',
+			};
+		}
+    }) 
   }
 
   pluginWillUnload() {
     uninject('note-button');
     uninject('note-context-menu');
+    powercord.api.commands.unregisterCommand('notebook')
   }
 
   async _injectHeaderBarContainer() {
@@ -66,18 +125,35 @@ module.exports = class Notebook extends Plugin {
     });
     MessageContextMenu.default.displayName = 'MessageContextMenu'
   }
-
+  
+  async _injectToolbar() {
+	const MiniPopover = await getModule((m) => m?.default?.displayName === "MiniPopover");
+    inject("note-toolbar", MiniPopover, "default", (args, res) => {
+		const props = findInReactTree(res, (r) => r?.message);
+		const channel = findInReactTree(args, (r) => r?.channel);
+		if (!props) return res;
+		res.props.children.unshift(
+			React.createElement(NoteButton, {
+                message: props.message,
+                channel: channel.channel
+			})
+		);
+		return res;
+	});
+	MiniPopover.default.displayName = "MiniPopover";
+  }
+          
   saveMessage(args) {
     let attachments = args[0].message.attachments[0];
     let noteFormat = {
-      'Message ID': args[0].message.id,
+      'Message_ID': args[0].message.id,
       'Username':   args[0].message.author.username,
-      'User ID':    args[0].message.author.id,
+      'User_ID':    args[0].message.author.id,
       'Content':    args[0].message.content,
       'Timestamp':  args[0].message.timestamp,
       'Editstamp':  args[0].message.editedTimestamp,
-      'Message URL': `https://discord.com/channels/${args[0].channel.guild_id}/${args[0].channel.id}/${args[0].message.id}`,
-      'Avatar URL': `https://cdn.discordapp.com/avatars/${args[0].message.author.id}/${args[0].message.author.avatar}.png`
+      'Message_URL': `https://discord.com/channels/${args[0].channel.guild_id}/${args[0].channel.id}/${args[0].message.id}`,
+      'Avatar_URL': `https://cdn.discordapp.com/avatars/${args[0].message.author.id}/${args[0].message.author.avatar}.png`
     }
     if (attachments) {
       noteFormat['Attachment'] = attachments.url;
