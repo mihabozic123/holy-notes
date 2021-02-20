@@ -66,12 +66,12 @@ module.exports = class Notebook extends Plugin {
                     }} 
 
                   note = notes[n]
+                  if (!note) {
+                    return {
+                      send:false,
+                      result: 'not a note'
+                  }}
                   message_ID = note['Message_ID'] 
-                  if(message_ID === undefined) {
-                      return {
-                      send: false,
-                      result: '```\nNot a note.\n```'
-                      }}
                   NotesHandler.getNote(message_ID)
                   return {
                       send: false,
@@ -160,23 +160,5 @@ module.exports = class Notebook extends Plugin {
 		return res;
 	});
 	MiniPopover.default.displayName = "MiniPopover";
-  }
-          
-  saveMessage(args) {
-    let attachments = args[0].message.attachments;
-    let noteFormat = {
-      'Message_ID': args[0].message.id,
-      'Username':   args[0].message.author.username,
-      'User_ID':    args[0].message.author.id,
-      'Content':    args[0].message.content,
-      'Timestamp':  args[0].message.timestamp,
-      'Editstamp':  args[0].message.editedTimestamp,
-      'Message_URL': `https://discord.com/channels/${args[0].channel.guild_id}/${args[0].channel.id}/${args[0].message.id}`,
-      'Avatar_URL': `https://cdn.discordapp.com/avatars/${args[0].message.author.id}/${args[0].message.author.avatar}.png`
-    }
-    if (attachments) {
-      noteFormat['Attachment'] = attachments.url;
-    }
-    NotesHandler.setNote(noteFormat);
   }
 };

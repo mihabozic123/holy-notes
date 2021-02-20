@@ -5,8 +5,9 @@ const Tooltip = getModuleByDisplayName("Tooltip", false);
 const { Button } =	getModule((m) => m?.default?.displayName === "MiniPopover", false) || {};
 const NotesHandler = new (require('../NotesHandler'))()
 
-let noteFormat = {}
+
 let attachments
+let noteFormat = {}
 
 class NoteButton extends React.PureComponent {
 	constructor(props) {
@@ -24,25 +25,7 @@ class NoteButton extends React.PureComponent {
 					<Button
                         className={`note-button`}
 						onClick={(e) => {
-							try {this.props.message.attachments
-                            noteFormat = {
-                              'Message_ID' : this.props.message.id,
-                              'Username' : this.props.message.author.username,
-                              'User_ID' : this.props.message.author.id,
-                              'Content' : this.props.message.content,
-                              'Timestamp' : this.props.message.timestamp,
-                              'Editstamp' : this.props.message.editedTimestamp,
-                              'Message_URL' : `https://discord.com/channels/${this.props.channel.guild_id}/${this.props.channel.id}/${this.props.message.id}`,
-                              'Avatar_URL' : `https://cdn.discordapp.com/avatars/${this.props.message.author.id}/${this.props.message.author.avatar}.png`
-                            }
-                            if (!this.props.message.attachments) {
-                                console.log("no Attachment on message")
-                            } else {
-                                noteFormat['Attachment'] = this.props.message.attachments
-                            }
-                            NotesHandler.setNote(noteFormat)} catch(err){
-                            console.log(err)
-                            }
+                            NotesHandler.saveNote(this.props,false)
 						}}
                         onMouseEnter={onMouseEnter}
 						onMouseLeave={onMouseLeave}

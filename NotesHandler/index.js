@@ -2,6 +2,8 @@
 const fs = require('fs')
 const path = require('path')
 const notesPath = path.join(__dirname, 'notes.json')
+const { getModule } = require('powercord/webpack')
+const { getMessage } = getModule(['getMessages'], false)
 
 class NotesHandler {
 	constructor() {
@@ -42,7 +44,7 @@ class NotesHandler {
 		notes[noteData[messageId]] = {}
 		/* Define 'newNoteData' as this new object array */
 		let newNoteData = notes[noteData[messageId]]
-		fs.writeFileSync(notesPath, JSON.stringify(notes, null, '\t'))
+		//fs.writeFileSync(notesPath, JSON.stringify(notes, null, '\t'))
 		for (let i = 0; i < Object.keys(noteData).length; i++) {
 			let noteDataName = Object.keys(noteData)[i]
 			let noteDataValue = noteData[noteDataName]
@@ -64,6 +66,40 @@ class NotesHandler {
         }
         fs.writeFileSync(notesPath, JSON.stringify(notes, null, '\t'))
     }
+	
+    saveNote = (args, link) => {
+        let message
+        let messageLink
+        let linkArray
+        console.log(args)
+        try{
+            if(link===true){
+                linkArray = args.split("/")         
+                message = getMessage(linkArray[linkArray.length-2],linkArray[linkArray.length-1])
+                messageLink = args
+            }
+            else {
+                message = args.message
+                messageLink = `https://discord.com/channels/${args.channel.guild_id}/${args.channel.id}/${args.message.id}`
+            }
+
+            let attached = message.attachments
+            let embeded = message.embeds
+            embeded =  embeded.filter(embed => !embed['__mlembed']);
+            let noteFormat = {
+                'Message_ID' : message.id,
+                'Username' : message.author.username,
+                'User_ID' : message.author.id,
+                'Content' : message.content,
+                'Timestamp' : message.timestamp,
+                'Editstamp' : message.editedTimestamp,
+                'Message_URL' : messageLink,
+                'Avatar_URL' : `https://cdn.discordapp.com/avatars/${message.author.id}/${message.author.avatar}.png`
+            }
+            if (attached) noteFormat['Attachment'] = attached
+            if (embeded) noteFormat['Embeds'] = embeded
+            this.setNote(noteFormat)} catch(err){console.log(err)}
+    }
 }
 
-module.exports = NotesHandler
+module.exports = NotesHandler;
