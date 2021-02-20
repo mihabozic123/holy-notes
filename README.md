@@ -12,5 +12,7 @@ The Message ID is listed above the Message in Note Viewer.
 
 Credits:
 https://github.com/D-Brox 	- erase command and Tooltip
+
 https://github.com/Swishilicous - Original Pluginmaker
+
 https://github.com/Juby210 and https://github.com/1Lighty for help
