@@ -20,6 +20,10 @@ module.exports = class Notebook extends Plugin {
     this._injectContextMenu()
     this._injectToolbar()
 
+    const Message = await getModule(m => m.prototype && m.prototype.getReaction && m.prototype.isSystemDM)
+    const ChannelMessage = await getModule(m => m.type && m.type.displayName == 'ChannelMessage')
+    const MiniPopover = await getModule(m => m.default && m.default.displayName == 'MiniPopover')
+
     powercord.api.commands.registerCommand({
         command: 'notebook',
         description: 'Notebook to keep your favourite notes',
@@ -159,7 +163,7 @@ module.exports = class Notebook extends Plugin {
   }
           
   saveMessage(args) {
-    let attachments = args[0].message.attachments[0];
+    let attachments = args[0].message.attachments;
     let noteFormat = {
       'Message_ID': args[0].message.id,
       'Username':   args[0].message.author.username,

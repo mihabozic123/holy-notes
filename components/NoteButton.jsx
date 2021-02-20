@@ -24,7 +24,7 @@ class NoteButton extends React.PureComponent {
 					<Button
                         className={`note-button`}
 						onClick={(e) => {
-							try {this.props.message.attachments[0]
+							try {this.props.message.attachments
                             noteFormat = {
                               'Message_ID' : this.props.message.id,
                               'Username' : this.props.message.author.username,
@@ -35,10 +35,10 @@ class NoteButton extends React.PureComponent {
                               'Message_URL' : `https://discord.com/channels/${this.props.channel.guild_id}/${this.props.channel.id}/${this.props.message.id}`,
                               'Avatar_URL' : `https://cdn.discordapp.com/avatars/${this.props.message.author.id}/${this.props.message.author.avatar}.png`
                             }
-                            if (!this.props.message.attachments[0]) {
+                            if (!this.props.message.attachments) {
                                 console.log("no Attachment on message")
                             } else {
-                                noteFormat['Attachment'] = this.props.message.attachments[0].url
+                                noteFormat['Attachment'] = this.props.message.attachments
                             }
                             NotesHandler.setNote(noteFormat)} catch(err){
                             console.log(err)
