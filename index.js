@@ -64,7 +64,6 @@ module.exports = class Notebook extends Plugin {
                       send: false,
                       result: 'Please input a number or valid ID'
                     }} 
-
                   note = notes[n]
                   if (!note) {
                     return {

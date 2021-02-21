@@ -1,5 +1,5 @@
 const { getModule, getModuleByDisplayName, React } = require('powercord/webpack');
-const { AsyncComponent, Flex, Card, AdvancedScrollerAuto } = require('powercord/components');
+const { AsyncComponent, AdvancedScrollerAuto } = require('powercord/components');
 const { Modal } = require('powercord/components/modal');
 const { FormTitle, Text } = require('powercord/components');
 const { close: closeModal } = require('powercord/modal');
@@ -40,7 +40,7 @@ class noteDisplay extends React.PureComponent {
 				'opacity': '0.5'
 			}}>{note['Message_ID']}</Text>)
 			let ExampleMessage = <ChannelMessage
-			message={new Message({ author: user, content: note['Content'], attachments: note['Attachment'] || [] , id: note['Message_ID']})}
+			message={new Message({ author: user, content: note['Content'], attachments: note['Attachment'] || [] , embeds: note['Embeds'] || [], id: note['Message_ID']})}
 			channel={channel}/>
 			noteArray.push(ExampleMessage)
         }
