@@ -40,7 +40,7 @@ class noteDisplay extends React.PureComponent {
 				'opacity': '0.5'
 			}}>{note['Message_ID']}</Text>)
 			let ExampleMessage = <ChannelMessage
-			message={new Message({ author: user, content: note['Content'], attachments: note['Attachment'] || [] , embeds: note['Embeds'] || [], id: note['Message_ID']})}
+			message={new Message({ author: user, content: note['Content'], attachments: note['Attachment'] || [] , embeds: note['Embeds'] || [], mentions: note['Mentions'] || [], id: note['Message_ID']})}
 			channel={channel}/>
 			noteArray.push(ExampleMessage)
         }
