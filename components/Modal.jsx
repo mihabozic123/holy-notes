@@ -4,11 +4,13 @@ const { Modal } = require('powercord/components/modal');
 const { FormTitle, Text } = require('powercord/components');
 const { close: closeModal } = require('powercord/modal');
 const { getCurrentUser, getUser } = getModule([ 'getCurrentUser' ], false);
+const { Avatar } = getModule(['Avatar'])
 
 const NotesHandler = new (require('../NotesHandler'))();
 const Message = getModule(m => m.prototype && m.prototype.getReaction && m.prototype.isSystemDM, false);
 const UserStore = getModule([ 'getCurrentUser' ], false);
 const ChannelMessage = getModule(m => m.type && m.type.displayName == 'ChannelMessage', false)
+const User = getModule(m => m.prototype && m.prototype.getAvatarSource && m.prototype.isLocalBot, false);
 
 const channel = {
 	isPrivate: () => false,
@@ -31,7 +33,8 @@ class noteDisplay extends React.PureComponent {
         for(let i = 0; i < Object.keys(settings).length; i++) {
             let note = settings[Object.keys(settings)[i]]
 
-			const user = UserStore.getUser(note['User_ID']);
+            const user = UserStore.getUser(note['User_ID']) || new User(note['User_ID']);
+            //const user = [{id: note["User_ID"], username: note['Username'], avatar: note['Avatar_Hash'], discriminator: note['Discriminator']}]
 			
 			noteArray.push(<Text selectable={true} style={{
 				'position': 'relative',

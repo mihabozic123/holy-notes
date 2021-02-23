@@ -90,12 +90,13 @@ class NotesHandler {
             let noteFormat = {
                 'Message_ID' : message.id,
                 'Username' : message.author.username,
+				'Discriminator': message.author.discriminator,
                 'User_ID' : message.author.id,
                 'Content' : message.content,
                 'Timestamp' : message.timestamp,
                 'Editstamp' : message.editedTimestamp,
                 'Message_URL' : messageLink,
-                'Avatar_URL' : `https://cdn.discordapp.com/avatars/${message.author.id}/${message.author.avatar}.png`
+				'Avatar_Hash': message.author.avatar
             }
             if (attached) noteFormat['Attachment'] = attached
             if (embeded) noteFormat['Embeds'] = embeded
