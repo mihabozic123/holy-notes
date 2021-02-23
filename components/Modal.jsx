@@ -52,7 +52,7 @@ class noteDisplay extends React.PureComponent {
             </Modal.Header>
 
             <Modal.Content>
-					<AdvancedScrollerAuto>cred
+					<AdvancedScrollerAuto>
 						<div className='group-spacing-16' ref={e => setTimeout(() => e?.parentNode?.scrollTo({top: e?.childNodes[6].offsetHeight + e?.childNodes[6].getBoundingClientRect().height}), 1)}> // fix hardcoded 6's
 						{noteArray}
 						</div>
