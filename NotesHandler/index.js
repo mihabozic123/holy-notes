@@ -73,14 +73,14 @@ class NotesHandler {
         let linkArray
         console.log(args)
         try{
-            if(link===true){
-                linkArray = args.split("/")         
+            if(link){
+                linkArray = args.split("/")
                 message = getMessage(linkArray[linkArray.length-2],linkArray[linkArray.length-1])
                 messageLink = args
             }
             else {
                 message = args.message
-                messageLink = `https://discord.com/channels/${args.channel.guild_id}/${args.channel.id}/${args.message.id}`
+                messageLink = `https://discord.com/channels/${args.channel.guild_id == null ? "@me" : args.channel.guild_id}/${args.channel.id}/${args.message.id}`
             }
 
             let attached = message.attachments
@@ -89,14 +89,11 @@ class NotesHandler {
             embeded =  embeded.filter(embed => !embed['__mlembed']);
             let noteFormat = {
                 'Message_ID' : message.id,
-                'Username' : message.author.username,
-				'Discriminator': message.author.discriminator,
-                'User_ID' : message.author.id,
                 'Content' : message.content,
                 'Timestamp' : message.timestamp,
                 'Editstamp' : message.editedTimestamp,
                 'Message_URL' : messageLink,
-				'Avatar_Hash': message.author.avatar
+				"Author_ID": message.author.id
             }
             if (attached) noteFormat['Attachment'] = attached
             if (embeded) noteFormat['Embeds'] = embeded

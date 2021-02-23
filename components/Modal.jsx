@@ -1,16 +1,13 @@
-const { getModule, getModuleByDisplayName, React } = require('powercord/webpack');
-const { AsyncComponent, AdvancedScrollerAuto } = require('powercord/components');
+const { getModule, React } = require('powercord/webpack');
+const { AdvancedScrollerAuto } = require('powercord/components');
 const { Modal } = require('powercord/components/modal');
 const { FormTitle, Text } = require('powercord/components');
 const { close: closeModal } = require('powercord/modal');
-const { getCurrentUser, getUser } = getModule([ 'getCurrentUser' ], false);
-const { Avatar } = getModule(['Avatar'])
+const { getUser } = getModule([ 'getCurrentUser' ], false);
 
 const NotesHandler = new (require('../NotesHandler'))();
 const Message = getModule(m => m.prototype && m.prototype.getReaction && m.prototype.isSystemDM, false);
-const UserStore = getModule([ 'getCurrentUser' ], false);
 const ChannelMessage = getModule(m => m.type && m.type.displayName == 'ChannelMessage', false)
-const User = getModule(m => m.prototype && m.prototype.getAvatarSource && m.prototype.isLocalBot, false);
 
 const channel = {
 	isPrivate: () => false,
@@ -31,11 +28,10 @@ class noteDisplay extends React.PureComponent {
         const settings = NotesHandler.getNotes();
 
         for(let i = 0; i < Object.keys(settings).length; i++) {
-            let note = settings[Object.keys(settings)[i]]
+            let note = settings[Object.keys(settings)[i]];
 
-            const user = UserStore.getUser(note['User_ID']) || new User(note['User_ID']);
-            //const user = [{id: note["User_ID"], username: note['Username'], avatar: note['Avatar_Hash'], discriminator: note['Discriminator']}]
-			
+            const author = getUser(note["Author_ID"]);
+
 			noteArray.push(<Text selectable={true} style={{
 				'position': 'relative',
 				'padding': '10px',
@@ -43,7 +39,7 @@ class noteDisplay extends React.PureComponent {
 				'opacity': '0.5'
 			}}>{note['Message_ID']}</Text>)
 			let ExampleMessage = <ChannelMessage
-			message={new Message({ author: user, content: note['Content'], attachments: note['Attachment'] || [] , embeds: note['Embeds'] || [], mentions: note['Mentions'] || [], id: note['Message_ID']})}
+			message={new Message({ author: author, content: note['Content'], attachments: note['Attachment'] || [] , embeds: note['Embeds'] || [], mentions: note['Mentions'] || [], id: note['Message_ID']})}
 			channel={channel}/>
 			noteArray.push(ExampleMessage)
         }
@@ -56,8 +52,8 @@ class noteDisplay extends React.PureComponent {
             </Modal.Header>
 
             <Modal.Content>
-					<AdvancedScrollerAuto>
-						<div className='group-spacing-16' ref={e => setTimeout(() => e?.parentNode?.scrollTo({top: e?.childNodes[6].offsetHeight + e?.childNodes[6].getBoundingClientRect().height}), 1)}>
+					<AdvancedScrollerAuto>cred
+						<div className='group-spacing-16' ref={e => setTimeout(() => e?.parentNode?.scrollTo({top: e?.childNodes[6].offsetHeight + e?.childNodes[6].getBoundingClientRect().height}), 1)}> // fix hardcoded 6's
 						{noteArray}
 						</div>
 					</AdvancedScrollerAuto>
