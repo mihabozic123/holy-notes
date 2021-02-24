@@ -93,7 +93,7 @@ class NotesHandler {
                 'Timestamp' : message.timestamp,
                 'Editstamp' : message.editedTimestamp,
                 'Message_URL' : messageLink,
-				"Author_ID": message.author.id
+				"User_ID": message.author.id
             }
             if (attached) noteFormat['Attachment'] = attached
             if (embeded) noteFormat['Embeds'] = embeded

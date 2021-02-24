@@ -30,7 +30,7 @@ class noteDisplay extends React.PureComponent {
         for(let i = 0; i < Object.keys(settings).length; i++) {
             let note = settings[Object.keys(settings)[i]];
 
-            const author = getUser(note["Author_ID"]);
+            const author = getUser(note["User_ID"]);
 
 			noteArray.push(<Text selectable={true} style={{
 				'position': 'relative',
@@ -53,7 +53,7 @@ class noteDisplay extends React.PureComponent {
 
             <Modal.Content>
 					<AdvancedScrollerAuto>
-						<div className='group-spacing-16' ref={e => setTimeout(() => e?.parentNode?.scrollTo({top: e?.childNodes[6].offsetHeight + e?.childNodes[6].getBoundingClientRect().height}), 1)}> // fix hardcoded 6's
+						<div className='group-spacing-16' ref={e => setTimeout(() => e?.parentNode?.scrollTo({top: e?.childNodes[6].offsetHeight + e?.childNodes[6].getBoundingClientRect().height}), 1)}>
 						{noteArray}
 						</div>
 					</AdvancedScrollerAuto>
